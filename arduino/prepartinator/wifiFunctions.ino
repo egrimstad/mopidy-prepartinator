@@ -1,16 +1,17 @@
 #include<ESP8266WiFi.h>
 
-#define WIFI_SSID "PiSpot"
-#define WIFI_PASS "passord123"
+#define WIFI_SSID "belkin.2ec"
+#define WIFI_PASS "4ebb76d9"
 
-const char* host = "192.168.42.1";
-const int port = 8000;
+const char* host = "192.168.2.20";
+const int port = 1337;
 
 WiFiClient client;
 
 void wifi_setup(){
   connectToAP();
-  Serial.println("WiFi setup successfull");
+  Serial.println("WiFi setup successful");
+  connectToServer();
 }
 
 static void connectToAP(){
@@ -36,12 +37,13 @@ static int connectToServer(){
 
 void wifi_sendRequest(String type, String value){
 
-  String msg = "{\"request\": \"" + type + "\", \"value\": \"" + value + "\"}";
-  /*
+  String msg = encodeRequest(type, value);
   client.print(msg);
-  client.print("\r\n");
-  */
   Serial.println(msg);
+}
+
+String encodeRequest(String type, String value){
+  return "{\"request\": \"" + type + "\", \"value\": \"" + value + "\"}";
 }
 
 

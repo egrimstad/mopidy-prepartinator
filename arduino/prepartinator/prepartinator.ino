@@ -1,4 +1,5 @@
 boolean sendingVol = false;
+int velocity = 0;
 
 void setup() {
   serialSetup();
@@ -6,7 +7,7 @@ void setup() {
 
   led_on('r');
   btn_setup();
-  //wifi_setup();
+  wifi_setup();
   i2c_setup();
   led_off();
 }
@@ -26,6 +27,7 @@ void loop() {
   
   if(btn_volBtnPressed()){
     if(!sendingVol){
+      velocity = 0;
       led_on('g');
       sendingVol = true;
     }
@@ -39,6 +41,7 @@ void loop() {
   delay(10);
 }
 
+// Sends a command based on the orientation of the device
 void sendCmd(){
   led_on('b');
   i2c_update(); // Update one last time to make sure we have updated data
@@ -47,9 +50,19 @@ void sendCmd(){
   led_off();
 }
 
+// Sends volume if velocity is high enough
 void sendVol(){
-  wifi_sendRequest("vol", String(1));
-  delay(50);
+  i2c_update();
+  int dv = i2c_getAccZ() - 1000;
+  velocity += dv;
+  
+  if(velocity < -1000){
+    wifi_sendRequest("vol", "-"); // Volume down
+  }
+  else if(velocity > 1000){
+    wifi_sendRequest("vol", "+"); // Volume up
+  }
+  delay(30);
 }
 
 // Map orientation to command
@@ -58,13 +71,13 @@ String cmdMap(char o){
     case('u'):
       return "mic";
     case('f'):
-      return "none";
-    case('b'):
-      return "playpause";
-    case('r'):
-      return "next";
-    case('l'):
       return "prev";
+    case('b'):
+      return "next";
+    case('r'):
+      return "none";
+    case('l'):
+      return "playpause";
     case('d'):
       return "none";
     default:

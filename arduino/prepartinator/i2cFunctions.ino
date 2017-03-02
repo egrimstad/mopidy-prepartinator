@@ -115,6 +115,10 @@ void i2c_anglesPrint(){
   Serial.println(aZ);
 }
 
+int i2c_getAccZ(){
+  return acc.z;
+}
+
 // Returns the calculated orientation by taking the max value of the readings in the buffer (to avoid reading one bad value)
 char i2c_getOrientation(){
   int amount[] = {0,0,0,0,0,0};
