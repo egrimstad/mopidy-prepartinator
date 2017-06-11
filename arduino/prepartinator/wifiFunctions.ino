@@ -1,9 +1,9 @@
 #include<ESP8266WiFi.h>
 
-#define WIFI_SSID "belkin.2ec"
-#define WIFI_PASS "4ebb76d9"
+#define WIFI_SSID "Galehuset"
+#define WIFI_PASS "andyercunt"
 
-const char* host = "192.168.2.20";
+const char* host = "192.168.0.103";
 const int port = 1337;
 
 WiFiClient client;
